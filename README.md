@@ -1,4 +1,4 @@
-specdna
+oligdna
 =======
 
-Convert Oligonucleotide to Literal DNA Strand Sequences
+Convert Oligodeoxyribonucleotides to Literal DNA Strand Sequences
