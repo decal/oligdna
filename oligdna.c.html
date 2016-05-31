@@ -1,0 +1,194 @@
+<html>
+<head><title>oligdna.c syntax-highlighted source code in HTML</title></head>
+<body bgcolor="Black" text="Red" link="Orange" vlink="Olive" alink="Gold">
+<br /><hr /><br />
+<code style="font-weight: bold"><pre style="text-shadow: 2px 2px #00B">
+<font color="Cobalt">/*
+   Generate Organic Quadruplet Nucleotide DNA Sequences From Base-N
+   Oligodeoxyribonucleotide Primers for Polymerase Chain Reaction
+
+   Written by Derek Callaway ( decal [AT] sdf [D0T] org )
+
+   Compile: gcc -Wall -ansi -pedantic -o oligdna oligdna.c
+*/</font>
+
+<font color="#0000cd">#include</font>&lt;stdio.h&gt;
+<font color="#0000cd">#include</font>&lt;stdlib.h&gt;
+
+<font color="#b682b4">void</font> usage(<b><font color=yellow>const</font></b> <font color="#b682b4">char</font> *av0) {
+  <b><font color=yellow>if</font></b>(!av0)
+    av0 = <font color=green>"specdna"</font>;
+
+  fprintf(stderr, <font color=green>"usage: %s &lt;file&gt;\n"</font>, av0);
+
+  exit(EXIT_FAILURE);
+}
+
+<font color="#b682b4">void</font> vexit(<b><font color=yellow>const</font></b> <font color="#b682b4">char</font> *f) {
+  <b><font color=yellow>if</font></b>(!f)
+    f = <font color=green>"vexit"</font>;
+
+  perror(f);
+
+  exit(EXIT_SUCCESS);
+}
+
+<b><font color=yellow>static</font></b> <font color="#b682b4">char</font> *_B=<font color=green>"Tcg"</font>, *_D=<font color=green>"ATg"</font>, *_H=<font color=green>"ATc"</font>, *_K=<font color=green>"Tg"</font>, *_M=<font color=green>"Ac"</font>;
+<b><font color=yellow>static</font></b> <font color="#b682b4">char</font> *_N=<font color=green>"AcTg"</font>, *_R=<font color=green>"Ag"</font>, *_S=<font color=green>"cg"</font>, *_V=<font color=green>"Acg"</font>, *_W=<font color=green>"AT"</font>, *_Y=<font color=green>"cT"</font>;
+
+<font color="#b682b4">int</font> main(<font color="#b682b4">int</font> argc, <font color="#b682b4">char</font> *argv[]) {
+  <font color="#b682b4">char</font> buf[BUFSIZ] = { 0 }, **mixs = NULL, **vals = NULL;
+  <b><font color=yellow>register</font></b> FILE *fp = NULL;
+  <b><font color=yellow>register</font></b> <font color="#b682b4">unsigned</font> <font color="#b682b4">int</font> acc = 0, cnt = 0;
+
+  <b><font color=yellow>if</font></b>(argc &lt; 2)
+    usage(*argv);
+
+  fp = fopen(argv[1], <font color=green>"r"</font>);
+
+  <b><font color=yellow>if</font></b>(!fp)
+    vexit(<font color=green>"fopen"</font>);
+
+  <b><font color=yellow>while</font></b>(fgets(buf, <b><font color=gray>sizeof</font></b> buf, fp)) {
+    <b><font color=yellow>register</font></b> <font color="#b682b4">char</font> *p = NULL, **pp = NULL, **pp2 = NULL;
+
+    mixs = vals = NULL;
+
+    <b><font color=yellow>for</font></b>(p = buf, cnt = 0, acc = 0;*p;p++)
+      <b><font color=yellow>switch</font></b>(*p) {
+        <b><font color=yellow>case</font></b> <font color=green>'B'</font>:
+        <b><font color=yellow>case</font></b> <font color=green>'D'</font>:
+        <b><font color=yellow>case</font></b> <font color=green>'H'</font>:
+        <b><font color=yellow>case</font></b> <font color=green>'K'</font>:
+        <b><font color=yellow>case</font></b> <font color=green>'M'</font>:
+        <b><font color=yellow>case</font></b> <font color=green>'N'</font>:
+        <b><font color=yellow>case</font></b> <font color=green>'R'</font>:
+        <b><font color=yellow>case</font></b> <font color=green>'S'</font>:
+        <b><font color=yellow>case</font></b> <font color=green>'V'</font>:
+        <b><font color=yellow>case</font></b> <font color=green>'W'</font>:
+        <b><font color=yellow>case</font></b> <font color=green>'Y'</font>:
+          cnt++;
+      }
+
+      <b><font color=yellow>if</font></b>(cnt &gt;= acc) {
+        <b><font color=yellow>register</font></b> size_t alen = 1 + cnt;
+
+        mixs = malloc(alen * <b><font color=yellow>sizeof</font></b> *mixs);
+
+        <b><font color=yellow>if</font></b>(!mixs)
+          vexit(<font color=green>"malloc"</font>);
+
+        vals = malloc(alen * <b><font color=yellow>sizeof</font></b> *vals);
+
+        <b><font color=yellow>if</font></b>(!vals)
+          vexit(<font color=green>"malloc"</font>);
+      }
+
+      <b><font color=yellow>for</font></b>(pp = mixs, pp2 = vals, p = buf;*p;p++)
+        <b><font color=yellow>switch</font></b>(*p) {
+          <b><font color=yellow>case</font></b> <font color=green>'B'</font>:
+            *pp++ = _B;
+            *pp2++ = _B;
+
+            <b><font color=yellow>break</font></b>;
+          <b><font color=yellow>case</font></b> <font color=green>'D'</font>:
+            *pp++ = _D;
+            *pp2++ = _D;
+
+            <b><font color=yellow>break</font></b>;
+          <b><font color=yellow>case</font></b> <font color=green>'H'</font>:
+            *pp++ = _H;
+            *pp2++ = _H;
+
+            <b><font color=yellow>break</font></b>;
+          <b><font color=yellow>case</font></b> <font color=green>'K'</font>:
+            *pp++ = _K;
+            *pp2++ = _K;
+
+            <b><font color=yellow>break</font></b>;
+          <b><font color=yellow>case</font></b> <font color=green>'M'</font>:
+            *pp++ = _M;
+            *pp2++ = _M;
+
+            <b><font color=yellow>break</font></b>;
+          <b><font color=yellow>case</font></b> <font color=green>'N'</font>:
+            *pp++ = _N;
+            *pp2++ = _N;
+
+            <b><font color=yellow>break</font></b>;
+          <b><font color=yellow>case</font></b> <font color=green>'R'</font>:
+            *pp++ = _R;
+            *pp2++ = _R;
+
+            <b><font color=yellow>break</font></b>;
+          <b><font color=yellow>case</font></b> <font color=green>'S'</font>:
+            *pp++ = _S;
+            *pp2++ = _S;
+
+            <b><font color=yellow>break</font></b>;
+          <b><font color=yellow>case</font></b> <font color=green>'V'</font>:
+            *pp++ = _V;
+            *pp2++ = _V;
+
+            <b><font color=yellow>break</font></b>;
+          <b><font color=yellow>case</font></b> <font color=green>'W'</font>:
+            *pp++ = _W;
+            *pp2++ = _W;
+
+            <b><font color=yellow>break</font></b>;
+          <b><font color=yellow>case</font></b> <font color=green>'Y'</font>:
+            *pp++ = _Y;
+            *pp2++ = _Y;
+
+            <b><font color=yellow>break</font></b>;
+          <b><font color=yellow>default</font></b>:
+            *pp++ = p;
+            *pp2++ = p;
+        }
+
+        *pp = NULL;
+
+        <b><font color=yellow>if</font></b>(cnt)
+          acc = --cnt;
+
+        <b><font color=yellow>for</font></b>(;*vals[acc];++*vals) {
+          <b><font color=yellow>register</font></b> <font color="#b682b4">unsigned</font> <font color="#b682b4">int</font> j = 0;
+
+          <b><font color=yellow>if</font></b>(!**vals) {
+            <b><font color=yellow>do</font></b> {
+              vals[j] = mixs[j];
+              ++vals[++j];
+            } <b><font color=yellow>while</font></b>(j &lt; acc && !*vals[j]);
+
+            <b><font color=yellow>if</font></b>(j == acc && !*vals[acc])
+              <b><font color=yellow>break</font></b>;
+           }
+
+           <b><font color=yellow>for</font></b>(j = 0, p = buf;*p;p++)
+             <b><font color=yellow>switch</font></b>(*p) {
+               <b><font color=yellow>case</font></b> <font color=green>'B'</font>:
+               <b><font color=yellow>case</font></b> <font color=green>'D'</font>:
+               <b><font color=yellow>case</font></b> <font color=green>'H'</font>:
+               <b><font color=yellow>case</font></b> <font color=green>'K'</font>:
+               <b><font color=yellow>case</font></b> <font color=green>'M'</font>:
+               <b><font color=yellow>case</font></b> <font color=green>'N'</font>:
+               <b><font color=yellow>case</font></b> <font color=green>'R'</font>:
+               <b><font color=yellow>case</font></b> <font color=green>'S'</font>:
+               <b><font color=yellow>case</font></b> <font color=green>'V'</font>:
+               <b><font color=yellow>case</font></b> <font color=green>'W'</font>:
+               <b><font color=yellow>case</font></b> <font color=green>'Y'</font>:
+                 putchar(*vals[j++]);
+
+                 <b><font color=yellow>break</font></b>;
+               <b><font color=yellow>default</font></b>:
+                 putchar(*p);
+             }
+        }
+  }
+
+  exit(EXIT_SUCCESS);
+}
+</pre></code>
+<br /><hr /><br />
+</body>
+</html>
